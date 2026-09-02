@@ -1,15 +1,13 @@
 export default defineEventHandler(async (event) => {
-    // Dohvaćamo konfiguraciju na ispravan Nuxt način
     const config = useRuntimeConfig(event);
     const clientId = config.malClientId;
 
-    // Čitamo 'rankingType' iz URL-a (npr. ?rankingType=airing)
+    // Parametri iz URL-a
     const query = getQuery(event);
-    const rankingType = query.rankingType || 'all'; // 'all' je zadana vrijednost
-
-    // NOVO: Generiramo nasumični pomak (offset) da dobijemo različite rezultate svaki put
-    // Dohvaćamo "stranicu" negdje između 1. i 100. mjesta
-    const randomOffset = Math.floor(Math.random() * 95);
+    const rankingType = query.rankingType || 'all';      // vrsta ljestvice
+    const random = query.random === 'true';              // izmiješati ili ne
+    // Broj animea (ograničen na 1-50 radi sigurnosti)
+    const limit = Math.min(Math.max(Number(query.limit) || 12, 1), 50);
 
     if (!clientId) {
         throw createError({
@@ -19,16 +17,24 @@ export default defineEventHandler(async (event) => {
     }
 
     try {
-        // Koristimo dinamički rankingType i NOVI nasumični offset u URL-u
-        const url = `https://api.myanimelist.net/v2/anime/ranking?ranking_type=${rankingType}&limit=50&offset=${randomOffset}`;
+        // Polja koja koristimo na karticama dashboarda
+        const fields = 'id,title,main_picture,mean';
+        const base = 'https://api.myanimelist.net/v2/anime/ranking';
+        const headers = { 'X-MAL-CLIENT-ID': clientId };
 
-        const response = await $fetch(url, {
-            headers: {
-                'X-MAL-CLIENT-ID': clientId,
-            },
-        });
+        if (random) {
+            // Dohvati veći bazen (top 500), izmiješaj i vrati nasumičnih `limit`
+            const url = `${base}?ranking_type=${rankingType}&limit=500&fields=${fields}`;
+            const response = await $fetch<any>(url, { headers });
+            const izmijesano = [...(response.data ?? [])]
+                .sort(() => Math.random() - 0.5)
+                .slice(0, limit);
+            return { ...response, data: izmijesano };
+        }
 
-        return response;
+        // Inače vrati top `limit` u redoslijedu ranga
+        const url = `${base}?ranking_type=${rankingType}&limit=${limit}&fields=${fields}`;
+        return await $fetch<any>(url, { headers });
 
     } catch (error) {
         console.error('Greška pri dohvaćanju podataka s MyAnimeList API-ja:', error);

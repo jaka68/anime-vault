@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useRouter } from 'vue-router';
 
 const { $auth } = useNuxtApp();
 const auth = $auth;
-const router = useRouter();
 
 const email = ref("");
 const password = ref("");
@@ -15,7 +13,7 @@ const error = ref(false);
 async function login() {
   try {
     await signInWithEmailAndPassword(auth, email.value, password.value);
-    router.push('/dashboard');
+    navigateTo('/dashboard');
   } catch (err: any) {
     message.value = "Pogrešan e-mail ili lozinka.";
     error.value = true;
@@ -24,7 +22,7 @@ async function login() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-cover bg-center flex items-center justify-center" style="background-image: url('https://wallpapercave.com/wp/wp6775494.jpg');">
+  <div class="relative min-h-screen w-full bg-cover bg-center flex items-center justify-center" style="background-image: url('https://wallpapercave.com/wp/wp6775494.jpg');">
     <div class="absolute inset-0 bg-black opacity-50"></div>
     <div class="relative bg-indigo-800 bg-opacity-80 p-10 rounded-2xl shadow-2xl w-full max-w-md text-white backdrop-blur-sm">
       <div class="text-center mb-8">

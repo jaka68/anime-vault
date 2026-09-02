@@ -1,27 +1,23 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
-export default defineNuxtPlugin((nuxtApp) => {
-    // Ovdje unesite svoju Firebase konfiguraciju
-    const firebaseConfig = {
-        apiKey: "AIzaSyCgA7PtlVOh2RZWg_zR3VeQ3ePPfLbYpPU",
-        authDomain: "your-project-id.firebaseapp.com",
-        projectId: "your-project-id",
-        storageBucket: "your-project-id.appspot.com",
-        messagingSenderId: "...",
-        appId: "...",
-    };
+export default defineNuxtPlugin(() => {
+    // Konfiguracija se čita iz runtime configa (vidi nuxt.config.ts + .env)
+    const config = useRuntimeConfig();
 
     // Inicijalizacija Firebase aplikacije
-    const app = initializeApp(firebaseConfig);
+    const app = initializeApp(config.public.firebase);
 
     // Inicijalizacija Firebase usluga
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
     // Omogućavanje pristupa Firebase uslugama u cijeloj aplikaciji
     return {
         provide: {
-            auth: auth,
+            auth,
+            db,
         },
     };
 });
