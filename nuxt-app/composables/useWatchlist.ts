@@ -8,9 +8,8 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
-// Composable za rad s "listom gledanja" trenutnog korisnika.
-// Podaci se spremaju u Firestore pod: users/{uid}/watchlist/{animeId}
-// Napomena: koristi se samo na klijentu (Firebase $db/$auth su klijentski).
+// funkcije za listu gledanja, spremaju se u firestore po useru
+// (users/uid/watchlist/animeId). radi samo na klijentu
 export function useWatchlist() {
   const { $db, $auth } = useNuxtApp();
 
@@ -18,7 +17,6 @@ export function useWatchlist() {
     return $auth.currentUser?.uid ?? null;
   }
 
-  // Dodaj anime u listu gledanja
   async function add(anime: any) {
     const id = uid();
     if (!id) return;
@@ -31,14 +29,13 @@ export function useWatchlist() {
     });
   }
 
-  // Ukloni anime iz liste gledanja
   async function remove(animeId: number | string) {
     const id = uid();
     if (!id) return;
     await deleteDoc(doc($db, "users", id, "watchlist", String(animeId)));
   }
 
-  // Provjeri je li anime već u listi
+  // je li anime vec u listi
   async function has(animeId: number | string): Promise<boolean> {
     const id = uid();
     if (!id) return false;
@@ -46,7 +43,6 @@ export function useWatchlist() {
     return snap.exists();
   }
 
-  // Dohvati cijelu listu gledanja
   async function all(): Promise<any[]> {
     const id = uid();
     if (!id) return [];

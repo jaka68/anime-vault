@@ -1,17 +1,14 @@
-// Zaštita ruta: propušta samo prijavljene korisnike.
-// Firebase se inicijalizira samo na klijentu (firebase.client.ts),
-// pa provjeru radimo tek na klijentskoj strani.
+// ako user nije prijavljen, baci ga na login
+// firebase radi samo na klijentu pa provjeravamo tek tamo
 export default defineNuxtRouteMiddleware(async () => {
   if (import.meta.server) return;
 
   const { $auth } = useNuxtApp();
 
-  // Pričekaj da Firebase obnovi sesiju (npr. nakon osvježavanja stranice)
+  // cekamo da firebase provjeri je li user jos prijavljen (npr. nakon refresha)
   await $auth.authStateReady();
 
   if (!$auth.currentUser) {
-    // Puni redirect (ne klijentska zamjena) da se /login učita čisto,
-    // jednako kao kad ga korisnik otvori izravno.
     window.location.replace("/login");
     return abortNavigation();
   }

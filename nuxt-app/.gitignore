@@ -22,3 +22,6 @@ logs
 .env
 .env.*
 !.env.example
+
+# Materijali s predavanja (ne idu u repo)
+course-materials

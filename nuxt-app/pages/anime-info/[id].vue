@@ -8,15 +8,15 @@ definePageMeta({
 
 const route = useRoute();
 
-// Detalji animea s naše server rute
+// detalji animea s nase server rute
 const { data: anime, pending, error } = useFetch<any>(`/api/anime/${route.params.id}`);
 
-// Lista gledanja
+// lista gledanja
 const { add, remove, has } = useWatchlist();
 const inList = ref(false);
 const saving = ref(false);
 
-// Moja lista (odgledano + ocjena)
+// moja lista (ocjena)
 const myList = useMyList();
 const inMyList = ref(false);
 const myRating = ref(1);
@@ -63,14 +63,14 @@ async function toggleMyList() {
   }
 }
 
-// Kada je anime već u mojoj listi, promjena ocjene je odmah sprema
+// ako je vec u listi, promjena ocjene se odmah sprema
 async function onRatingChange() {
   if (inMyList.value && anime.value) {
     await myList.setRating(anime.value.id, myRating.value);
   }
 }
 
-// Pomoćne funkcije za prikaz
+// za ljepsi prikaz statusa/sezone/tipa
 const statusi: Record<string, string> = {
   finished_airing: "Završeno",
   currently_airing: "Emitira se",
@@ -107,12 +107,10 @@ function formatTrajanje(sekunde?: number) {
       ← Natrag na popis
     </NuxtLink>
 
-    <!-- Učitavanje -->
     <div v-if="pending" class="text-center text-gray-500 mt-8">
       <p>Učitavanje detalja...</p>
     </div>
 
-    <!-- Greška -->
     <div
       v-else-if="error"
       class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
@@ -120,16 +118,13 @@ function formatTrajanje(sekunde?: number) {
       <span>{{ error.message }}</span>
     </div>
 
-    <!-- Detalji -->
     <div v-else-if="anime" class="bg-white rounded-lg shadow mt-4 p-6">
       <div class="flex flex-col md:flex-row gap-6">
-        <!-- Poster -->
         <img
           :src="anime.main_picture?.large"
           :alt="anime.title"
           class="w-48 rounded-lg object-cover self-start mx-auto md:mx-0">
 
-        <!-- Podaci -->
         <div class="flex-1">
           <h1 class="text-2xl font-bold text-gray-800">{{ anime.title }}</h1>
 
@@ -146,7 +141,7 @@ function formatTrajanje(sekunde?: number) {
             </span>
           </div>
 
-          <!-- Žanrovi -->
+          <!-- zanrovi -->
           <div v-if="anime.genres?.length" class="flex flex-wrap gap-2 mt-4">
             <span
               v-for="zanr in anime.genres"
@@ -156,9 +151,8 @@ function formatTrajanje(sekunde?: number) {
             </span>
           </div>
 
-          <!-- Akcije -->
+          <!-- gumbi za liste -->
           <div class="mt-5 flex flex-col gap-3">
-            <!-- Lista gledanja -->
             <button
               @click="toggleWatchlist"
               :disabled="saving"
@@ -167,7 +161,7 @@ function formatTrajanje(sekunde?: number) {
               {{ inList ? "✓ Ukloni iz liste gledanja" : "+ Dodaj u listu gledanja" }}
             </button>
 
-            <!-- Moja lista (odgledano + ocjena) -->
+            <!-- ocjena + dodavanje u moju listu -->
             <div class="flex items-center gap-2">
               <label class="text-sm text-gray-700">Moja ocjena:</label>
               <select
@@ -188,7 +182,7 @@ function formatTrajanje(sekunde?: number) {
         </div>
       </div>
 
-      <!-- Opis -->
+      <!-- opis -->
       <div class="mt-6">
         <h2 class="text-lg font-bold text-gray-700 mb-2">Opis</h2>
         <p class="text-gray-600 text-sm whitespace-pre-line leading-relaxed">

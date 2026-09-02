@@ -9,7 +9,7 @@ definePageMeta({
 const route = useRoute();
 const pojam = computed(() => (route.query.q as string) || "");
 
-// Reaktivni useFetch - automatski se ponovno pokrene kad se ?q= promijeni
+// useFetch se sam ponovi kad se ?q= promijeni
 const { data, pending, error } = useFetch<any>("/api/search", {
   query: { q: pojam },
   key: "search",
@@ -25,7 +25,6 @@ const results = computed(() => data.value?.data ?? []);
       <span v-if="pojam" class="text-gray-400 font-normal text-lg">— "{{ pojam }}"</span>
     </h2>
 
-    <!-- Stanja -->
     <div v-if="!pojam" class="text-gray-600">
       Upiši naziv animea u tražilicu gore.
     </div>
@@ -35,7 +34,7 @@ const results = computed(() => data.value?.data ?? []);
       Nema rezultata za "{{ pojam }}".
     </div>
 
-    <!-- Rezultati -->
+    <!-- rezultati -->
     <div
       v-else
       class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">

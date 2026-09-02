@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
     }
 
     try {
-        // Sva polja koja prikazujemo na anime-info stranici
+        // sve sto trebamo za stranicu s detaljima
         const fields = [
             "id",
             "title",

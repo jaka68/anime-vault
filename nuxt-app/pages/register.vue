@@ -8,13 +8,13 @@ const confirmPassword = ref("");
 const showPassword = ref(false);
 const message = ref("");
 
-// Provjera jačine lozinke (uvjeti iz skripte 3)
+// provjera lozinke - svaki uvjet posebno
 const hasMinLength = computed(() => password.value.length >= 8);
 const hasUpper = computed(() => /[A-Z]/.test(password.value));
 const hasNumber = computed(() => /[0-9]/.test(password.value));
 const hasSpecial = computed(() => /[^A-Za-z0-9]/.test(password.value));
 
-// Broj ispunjenih uvjeta (0-4)
+// koliko uvjeta je ispunjeno (0-4)
 const strength = computed(
   () =>
     [hasMinLength, hasUpper, hasNumber, hasSpecial].filter((c) => c.value).length
@@ -31,7 +31,7 @@ const passwordsMatch = computed(
   () => confirmPassword.value.length > 0 && password.value === confirmPassword.value
 );
 
-// Forma je ispravna kada su svi uvjeti ispunjeni i lozinke se podudaraju
+// gumb radi tek kad je sve ok
 const isValid = computed(() => strength.value === 4 && passwordsMatch.value);
 
 function firebaseGreska(code: string) {
@@ -67,7 +67,7 @@ async function register() {
         placeholder="Email"
         class="w-full mb-3 p-2 border rounded-lg focus:ring focus:ring-blue-300" />
 
-      <!-- Lozinka + prikaži/sakrij -->
+      <!-- lozinka + gumb prikazi/sakrij -->
       <div class="relative mb-3">
         <input
           v-model="password"
@@ -82,14 +82,14 @@ async function register() {
         </button>
       </div>
 
-      <!-- Potvrda lozinke -->
+      <!-- ponovi lozinku -->
       <input
         v-model="confirmPassword"
         :type="showPassword ? 'text' : 'password'"
         placeholder="Ponovi lozinku"
         class="w-full mb-3 p-2 border rounded-lg focus:ring focus:ring-blue-300" />
 
-      <!-- Indikator jačine lozinke -->
+      <!-- traka + uvjeti za lozinku -->
       <div v-if="password" class="mb-3">
         <div class="h-2 rounded bg-gray-200 overflow-hidden mb-2">
           <div

@@ -9,9 +9,8 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
-// Composable za "Moju anime listu" - odgledani animei koje korisnik ocjenjuje.
-// Podaci: users/{uid}/mylist/{animeId}. Lista se sortira po ocjeni (silazno).
-// Koristi se samo na klijentu (Firebase $db/$auth su klijentski).
+// moja lista = odgledani animei s mojom ocjenom
+// sprema se u firestore (users/uid/mylist/animeId), sortira po ocjeni
 export function useMyList() {
   const { $db, $auth } = useNuxtApp();
 
@@ -19,7 +18,7 @@ export function useMyList() {
     return $auth.currentUser?.uid ?? null;
   }
 
-  // Dodaj (odgledani) anime s ocjenom
+  // dodaj anime s ocjenom
   async function add(anime: any, rating: number) {
     const id = uid();
     if (!id) return;
@@ -33,21 +32,19 @@ export function useMyList() {
     });
   }
 
-  // Promijeni ocjenu postojećeg animea
+  // promijeni ocjenu
   async function setRating(animeId: number | string, rating: number) {
     const id = uid();
     if (!id) return;
     await updateDoc(doc($db, "users", id, "mylist", String(animeId)), { rating });
   }
 
-  // Ukloni anime iz liste
   async function remove(animeId: number | string) {
     const id = uid();
     if (!id) return;
     await deleteDoc(doc($db, "users", id, "mylist", String(animeId)));
   }
 
-  // Dohvati jedan zapis (ili null ako ne postoji)
   async function get(animeId: number | string): Promise<any | null> {
     const id = uid();
     if (!id) return null;
@@ -55,7 +52,7 @@ export function useMyList() {
     return snap.exists() ? snap.data() : null;
   }
 
-  // Dohvati cijelu listu, sortiranu po ocjeni (najbolji prvi)
+  // dohvati sve, najbolje ocijenjeni prvi
   async function all(): Promise<any[]> {
     const id = uid();
     if (!id) return [];

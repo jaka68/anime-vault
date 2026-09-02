@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Zaštiti stranicu + koristi layout s bočnim menijem
+// treba biti prijavljen + layout s menijem
 definePageMeta({
   layout: "app",
   middleware: "auth",

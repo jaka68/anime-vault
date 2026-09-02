@@ -25,12 +25,11 @@ async function ukloni(animeId: number) {
   <div>
     <h2 class="text-2xl font-bold mb-6 text-gray-700">Lista gledanja</h2>
 
-    <!-- Učitavanje -->
     <div v-if="loading" class="text-center text-gray-500">
       <p>Učitavanje...</p>
     </div>
 
-    <!-- Prazna lista -->
+    <!-- ako je prazno -->
     <div v-else-if="items.length === 0" class="bg-white rounded-lg shadow p-6 text-gray-600">
       <p>Lista gledanja je prazna.</p>
       <NuxtLink to="/dashboard" class="text-blue-600 hover:underline text-sm">
@@ -38,7 +37,7 @@ async function ukloni(animeId: number) {
       </NuxtLink>
     </div>
 
-    <!-- Popis -->
+    <!-- kartice -->
     <div
       v-else
       class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">

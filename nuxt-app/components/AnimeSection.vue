@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Jedna sekcija dashboarda: naslov + vodoravni red anime kartica.
+// jedna sekcija na dashboardu (npr. "najbolje rangirani")
 const props = defineProps<{
   title: string;
   rankingType?: string;
@@ -21,15 +21,13 @@ const { data, pending, error } = useFetch<any>("/api/anime", {
   <section class="mb-8">
     <h2 class="text-xl font-bold mb-3 text-gray-700">{{ title }}</h2>
 
-    <!-- Učitavanje -->
     <div v-if="pending" class="text-gray-500 text-sm">Učitavanje...</div>
 
-    <!-- Greška -->
     <div v-else-if="error" class="text-red-600 text-sm">
       Greška pri učitavanju sekcije.
     </div>
 
-    <!-- Mreža kartica -->
+    <!-- kartice -->
     <div
       v-else-if="data && data.data"
       class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
@@ -54,7 +52,7 @@ const { data, pending, error } = useFetch<any>("/api/anime", {
       </NuxtLink>
     </div>
 
-    <!-- Linija razdvajanja ispod sekcije -->
+    <!-- linija ispod sekcije -->
     <hr class="mt-6 border-gray-300">
   </section>
 </template>

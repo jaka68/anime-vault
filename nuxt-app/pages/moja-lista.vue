@@ -15,7 +15,7 @@ onMounted(async () => {
   loading.value = false;
 });
 
-// Promjena ocjene -> spremi i ponovno sortiraj listu
+// promijeni ocjenu pa opet poslozi listu
 async function promijeniOcjenu(anime: any) {
   await setRating(anime.animeId, anime.rating);
   items.value.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
@@ -31,12 +31,11 @@ async function ukloni(animeId: number) {
   <div>
     <h2 class="text-2xl font-bold mb-6 text-gray-700">Moja anime lista</h2>
 
-    <!-- Učitavanje -->
     <div v-if="loading" class="text-center text-gray-500">
       <p>Učitavanje...</p>
     </div>
 
-    <!-- Prazna lista -->
+    <!-- ako je prazno -->
     <div v-else-if="items.length === 0" class="bg-white rounded-lg shadow p-6 text-gray-600">
       <p>Još nisi ocijenio nijedan anime.</p>
       <NuxtLink to="/dashboard" class="text-blue-600 hover:underline text-sm">
@@ -44,18 +43,17 @@ async function ukloni(animeId: number) {
       </NuxtLink>
     </div>
 
-    <!-- Poredana lista -->
+    <!-- lista poslozena po ocjeni -->
     <div v-else class="flex flex-col gap-3">
       <div
         v-for="(anime, index) in items"
         :key="anime.animeId"
         class="bg-white rounded-lg shadow flex items-center gap-4 p-3">
-        <!-- Pozicija u rangu -->
+        <!-- broj u rangu -->
         <div class="text-2xl font-bold text-gray-400 w-10 text-center">
           {{ index + 1 }}.
         </div>
 
-        <!-- Poster + naslov (link na detalje) -->
         <NuxtLink :to="`/anime-info/${anime.animeId}`" class="flex items-center gap-3 flex-1 min-w-0">
           <img :src="anime.image" :alt="anime.title" class="w-12 h-16 object-cover rounded">
           <div class="min-w-0">
@@ -64,7 +62,7 @@ async function ukloni(animeId: number) {
           </div>
         </NuxtLink>
 
-        <!-- Ocjena korisnika -->
+        <!-- moja ocjena -->
         <div class="flex items-center gap-2">
           <label class="text-sm text-gray-600">Ocjena:</label>
           <select
@@ -75,7 +73,6 @@ async function ukloni(animeId: number) {
           </select>
         </div>
 
-        <!-- Ukloni -->
         <button
           @click="ukloni(anime.animeId)"
           class="bg-red-500 hover:bg-red-600 text-white text-sm font-bold py-1.5 px-3 rounded">

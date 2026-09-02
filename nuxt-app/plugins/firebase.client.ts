@@ -3,17 +3,16 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 export default defineNuxtPlugin(() => {
-    // Konfiguracija se čita iz runtime configa (vidi nuxt.config.ts + .env)
+    // config se cita iz .env (preko nuxt.config.ts)
     const config = useRuntimeConfig();
 
-    // Inicijalizacija Firebase aplikacije
     const app = initializeApp(config.public.firebase);
 
-    // Inicijalizacija Firebase usluga
+    // auth za prijavu, db za bazu
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Omogućavanje pristupa Firebase uslugama u cijeloj aplikaciji
+    // da im mozemo pristupati svugdje preko $auth i $db
     return {
         provide: {
             auth,

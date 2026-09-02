@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    // MAL pretraga traži barem 2 znaka; za kraće vraćamo prazno
+    // mal trazi barem 2 znaka, inace vratimo prazno
     if (q.length < 2) {
         return { data: [] };
     }

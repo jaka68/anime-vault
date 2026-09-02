@@ -4,14 +4,14 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 
 const isOpen = ref(false);
 
-// Pretraga iz gornje trake
+// pretraga iz gornje trake
 const searchQuery = ref("");
 function submitSearch() {
   if (!searchQuery.value.trim()) return;
   navigateTo({ path: "/search", query: { q: searchQuery.value } });
 }
 
-// Email prijavljenog korisnika. Firebase ($auth) postoji samo na klijentu.
+// email prijavljenog usera ($auth radi samo na klijentu)
 const userEmail = ref<string>("");
 
 onMounted(() => {
@@ -31,7 +31,7 @@ async function handleLogout() {
 
 <template>
   <div class="min-h-screen bg-gray-100">
-    <!-- Gornja traka s hamburger gumbom -->
+    <!-- gornja traka -->
     <header class="bg-white shadow">
       <div class="container mx-auto px-6 py-4 flex items-center gap-4">
         <button
@@ -42,7 +42,7 @@ async function handleLogout() {
         </button>
         <h1 class="text-2xl font-bold text-gray-800">Anime Vault</h1>
 
-        <!-- Tražilica -->
+        <!-- trazilica -->
         <form @submit.prevent="submitSearch" class="ml-auto flex gap-2">
           <input
             v-model="searchQuery"
@@ -58,13 +58,13 @@ async function handleLogout() {
       </div>
     </header>
 
-    <!-- Zatamnjenje iza menija -->
+    <!-- zatamnjenje kad je meni otvoren -->
     <div
       v-if="isOpen"
       @click="isOpen = false"
       class="fixed inset-0 bg-black/50 z-20"></div>
 
-    <!-- Bočni meni (lijevo) -->
+    <!-- bocni meni -->
     <aside
       class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-30 transform transition-transform duration-300"
       :class="isOpen ? 'translate-x-0' : '-translate-x-full'">
@@ -116,7 +116,7 @@ async function handleLogout() {
       </div>
     </aside>
 
-    <!-- Sadržaj stranice -->
+    <!-- ovdje ide sadrzaj stranice -->
     <main class="container mx-auto px-6 py-8">
       <slot />
     </main>
